@@ -1,7 +1,6 @@
 use std::{collections::VecDeque, fs, iter::Inspect};
 
 use itertools::Itertools;
-
 pub fn day10() {
     let input = fs::read_to_string("./input/day10/test-input.txt").expect("Couldn't load input");
     let input = fs::read_to_string("./input/day10/input.txt").expect("Couldn't load input");
@@ -12,15 +11,41 @@ pub fn day10() {
         .collect();
     println!("instructions: {:?}", instructions);
     let mut cpu = CPU::new(instructions);
-    let regxs: Vec<i32> = cpu
-        .reg_xs()
-        .enumerate()
-        .skip(19)
-        .step_by(40)
-        .map(|(i, regx)| (i as i32 + 1) * regx)
-        .collect();
-    let sum: i32 = regxs.iter().sum();
-    println!("regxs: {:?}, sum: {sum}", regxs);
+    let part1 = false;
+    if part1 {
+        let regxs: Vec<i32> = cpu
+            .reg_xs()
+            .enumerate()
+            .skip(19)
+            .step_by(40)
+            .map(|(i, regx)| (i as i32 + 1) * regx)
+            .collect();
+        let sum: i32 = regxs.iter().sum();
+        println!("regxs: {:?}, sum: {sum}", regxs);
+    } else {
+        // part2
+        fn map_to_pixel((i, reg_x): (usize, i32)) -> char {
+            let x = (i % 40) as i32;
+            if reg_x - 1 <= x && reg_x + 2 > x {
+                println!("x: {x}, reg_x: {reg_x}, symbol: #");
+                '#'
+            } else {
+                println!("x: {x}, reg_x: {reg_x}, symbol: .");
+                '.'
+            }
+        }
+        let lines: Vec<String> = cpu
+            .reg_xs()
+            .enumerate()
+            .map(map_to_pixel)
+            .array_chunks()
+            .map(|line: [char; 40]| line.iter().collect())
+            .collect();
+        println!("Display: ");
+        for line in lines {
+            println!("{}", line);
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -80,7 +105,7 @@ impl CPU {
                 self.current = self.instructions.pop_front();
                 self.last_fetch = self.cycle_counter
             }
-            println!("cycle: {}, regx: {}", self.cycle_counter, self.reg_x);
+            //println!("cycle: {}, regx: {}", self.cycle_counter, self.reg_x);
             self.cycle_counter += 1;
         }
     }
@@ -91,7 +116,7 @@ impl CPU {
                 Instruction::Addx(value) => self.reg_x += value,
                 Instruction::Noop => (),
             }
-            println!("exeucte: {:?}, new reg_x: {}", current, self.reg_x);
+            //println!("exeucte: {:?}, new reg_x: {}", current, self.reg_x);
         }
     }
 
