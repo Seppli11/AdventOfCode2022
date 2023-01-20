@@ -1,7 +1,11 @@
 #![feature(iter_array_chunks)]
+#![feature(int_roundings)]
 mod day1;
 mod day10;
 mod day11;
+mod day12;
+mod day13;
+mod day14;
 mod day2;
 mod day3;
 mod day4;
@@ -12,5 +16,5 @@ mod day8;
 mod day9;
 
 fn main() {
-    day11::day11()
+    day14::day14()
 }
